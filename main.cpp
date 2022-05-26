@@ -4,16 +4,18 @@
 
 struct MyData
 {
-	MyData(){ std::cout << "Ctor" << std::endl; }
+	MyData() = default;// { std::cout << "Ctor" << std::endl; }
 	/*MyData(const std::string& s, int a)
 	{
 		values[s] = 17;
 		age = a;
 	}*/
-	MyData(const MyData& rhs)
-	{
-		*this = rhs;
-	}
+	MyData(const MyData& rhs) = default;
+	//MyData& operator=(const MyData& rhs) = default;
+
+	//{
+	//	*this = rhs;
+	//}
 
 	MyData(MyData&& rhs) noexcept
 	{
@@ -28,13 +30,12 @@ struct MyData
 		return *this;
 	}
 
-	MyData& operator=(const MyData& rhs) noexcept
-	{
-		std::cout << "Copy" << std::endl;
-		values = rhs.values;
-		age = rhs.age;
-		return *this;
-	}
+	//{
+	//	std::cout << "Copy" << std::endl;
+	//	values = rhs.values;
+	//	age = rhs.age;
+	//	return *this;
+	//}
 
 	std::map<std::string, int> values;
 	int age{0};
@@ -76,5 +77,5 @@ int main(int argc, char** argv)
 	std::cout << "v=" << v.size() << std::endl;
 	std::cout << "v2=" << v2.size() << std::endl;
 
-	//std::vector<MyData> v3 = v2;
+	std::vector<MyData> v3 = v2;
 }
