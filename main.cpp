@@ -2,6 +2,23 @@
 #include <map>
 #include <vector>
 
+struct SubData
+{
+	SubData() = default;
+	SubData(const SubData& rhs) = default;
+	
+	// If not defined, Copy ctor is called instead
+	SubData(SubData&& rhs) = default;
+
+	std::vector<int> v;
+};
+
+struct MyData0
+{
+	std::map<std::string, int> values;
+	SubData sd;
+};
+
 struct MyData
 {
 	MyData() = default;// { std::cout << "Ctor" << std::endl; }
@@ -53,10 +70,37 @@ void fill_vector(std::vector<MyData>& v)
 	}
 }
 
+void testData0()
+{
+	MyData0 d0;
+	d0.values["toto"] = 17;
+	MyData0 d1 = d0;
+	std::cout << "s1=" << d0.values.size() << std::endl;
+	MyData0 d3 = std::move(d0);
+	std::cout << "s1=" << d0.values.size() << std::endl;
+
+	std::vector<MyData0> v;
+	MyData0 d;
+	d.values["titi"] = 17;
+	v.push_back(d);
+	d.values["toto"] = 22;
+	v.push_back(d);
+
+	std::vector<MyData0> v1 = v;
+	std::vector<MyData0> v2 = std::move(v);
+
+	v2[0].sd.v.push_back(1121);
+	std::vector<MyData0> v3;
+	v3.push_back(std::move(v2[0]));
+	std::cout << "Subsize: " << v2[0].sd.v.size() << std::endl;
+}
+
 int main(int argc, char** argv)
 {
 	std::cout << "Hello world" << std::endl;
 	
+	testData0(); return 1;
+
 	std::vector<MyData> v;
 	//v.reserve(25);
 	fill_vector(v);
@@ -78,4 +122,8 @@ int main(int argc, char** argv)
 	std::cout << "v2=" << v2.size() << std::endl;
 
 	std::vector<MyData> v3 = v2;
+
+	
+
+
 }
